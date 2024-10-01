@@ -155,15 +155,15 @@
 			"name": "Find county details",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "Request with random value",
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"const country = pm.variables.replaceIn('{{$randomCountry))');\r",
-									"console.log(country);\r",
-									"pm.collectionVariables.set(\"myCountry\", country);"
+									"const myCountry = pm.variables.replaceIn('{{$randomCountry}}');\r",
+									"console.log(myCountry);\r",
+									"pm.collectionVariables.set(\"myCountry\", myCountry);"
 								],
 								"type": "text/javascript",
 								"packages": {}
