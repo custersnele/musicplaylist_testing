@@ -1,0 +1,239 @@
+{
+	"info": {
+		"_postman_id": "8ec5f70b-2626-49cc-8c20-a7ac985fc8c4",
+		"name": "Testing musicplaylist API",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" width=\"2162\" height=\"1530\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4600174"
+	},
+	"item": [
+		{
+			"name": "Scenario 1 - adding songs",
+			"item": [
+				{
+					"name": "Clear all songs from the playlist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/playlist/clearAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"playlist",
+								"clearAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add song 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response is ok\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let repeatCount = pm.variables.get(\"repeatCount\");",
+									"",
+									"if (parseInt(repeatCount) < 5) {",
+									"    pm.execution.setNextRequest(pm.info.requestName);",
+									"} else {",
+									"    pm.variables.unset(\"repeatCount\");",
+									"    pm.execution.setNextRequest(\"Retrieve all songs\");",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let currentCount = 1;",
+									"",
+									"if (!pm.variables.get(\"repeatCount\")) {",
+									"    pm.variables.set(\"repeatCount\", currentCount);",
+									"} else {",
+									"    currentCount = parseInt(pm.variables.get(\"repeatCount\")) + 1;",
+									"    pm.variables.set(\"repeatCount\", currentCount);",
+									"}",
+									"// Generate a random product name using Postman's dynamic variables",
+									"var randomTitle = pm.variables.replaceIn(\"{{$randomProductName}}\");",
+									"var randomArtist = pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+									"pm.variables.set(\"randomTitle\", randomTitle);",
+									"pm.variables.set(\"randomArtist\", randomArtist);",
+									"// Set the collection variable \"artist1\" with the random product name",
+									"pm.collectionVariables.set(\"title\" + currentCount, randomTitle);",
+									"pm.collectionVariables.set(\"artist\" + currentCount, randomArtist);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"{{randomTitle}}\",\n  \"artist\": \"{{randomArtist}}\",\n  \"duration_seconds\": {{$randomInt}},\n  \"genre\": \"POP\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/playlist/songs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"playlist",
+								"songs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve all songs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Retrieves 5 songs\", function() {",
+									"        var jsonData = pm.response.json();",
+									"        pm.expect(jsonData.length).to.equal(5);",
+									"        pm.expect(jsonData[0].title).to.equal(pm.collectionVariables.get(\"title1\"));",
+									"    }",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/playlist/songs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"playlist",
+								"songs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		},
+		{
+			"key": "title1",
+			"value": ""
+		},
+		{
+			"key": "artist1",
+			"value": ""
+		},
+		{
+			"key": "title2",
+			"value": ""
+		},
+		{
+			"key": "artist2",
+			"value": ""
+		},
+		{
+			"key": "title3",
+			"value": ""
+		},
+		{
+			"key": "artist3",
+			"value": ""
+		},
+		{
+			"key": "title4",
+			"value": ""
+		},
+		{
+			"key": "artist4",
+			"value": ""
+		},
+		{
+			"key": "title5",
+			"value": ""
+		},
+		{
+			"key": "artist5",
+			"value": ""
+		},
+		{
+			"key": "title6",
+			"value": ""
+		},
+		{
+			"key": "artist6",
+			"value": ""
+		}
+	]
+}
