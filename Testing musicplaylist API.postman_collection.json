@@ -156,6 +156,56 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "New Folder",
+			"item": [
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const country = pm.variables.replaceIn('{{$randomCountry))');\r",
+									"console.log(country);\r",
+									"pm.collectionVariables.set(\"myCountry\", country);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(pm.response.json()[0].capital)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://restcountries.com/v3.1/name/{{myCountry}}",
+							"protocol": "https",
+							"host": [
+								"restcountries",
+								"com"
+							],
+							"path": [
+								"v3.1",
+								"name",
+								"{{myCountry}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -233,6 +283,10 @@
 		},
 		{
 			"key": "artist6",
+			"value": ""
+		},
+		{
+			"key": "myCountry",
 			"value": ""
 		}
 	]
