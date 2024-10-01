@@ -16,12 +16,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/playlist/clearAll",
-							"protocol": "http",
+							"raw": "{{baseUrl}}/playlist/clearAll",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "9090",
 							"path": [
 								"playlist",
 								"clearAll"
@@ -94,12 +92,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/playlist/songs",
-							"protocol": "http",
+							"raw": "{{baseUrl}}/playlist/songs",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "9090",
 							"path": [
 								"playlist",
 								"songs"
@@ -141,12 +137,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/playlist/songs",
-							"protocol": "http",
+							"raw": "{{baseUrl}}/playlist/songs",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "9090",
 							"path": [
 								"playlist",
 								"songs"
